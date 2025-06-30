@@ -31,9 +31,11 @@
         <h2 id="title_">Block The Fish</h2>
         <p id="text_">This is my game called <em><strong>"Block the Fish"</strong></em>. It is a game where you are trying to block the fish with the blocker.</p>
 
+        <p id="games"></p>
+
         <script>
             let game = 1;
-            let games = ["Block the fish"];
+            let games = ["Block the fish"]
             let fish_color;
             const fish_size = [75, 50];
             let fish_speed = 5;
@@ -53,6 +55,7 @@
             let scene = 1;
             let never_ending;
             let level = 1;
+            let the_games = document.getElementById("games")
 
             function X_and_y(x1, y1, x2, y2) {
                 this.x1 = x1;
@@ -68,6 +71,8 @@
             let b3 = new X_and_y(120, 270, 280, 330);
             let b4 = new X_and_y(30, 112.5, 120, 350);
             let b5 = new X_and_y(280, 112.5, 370, 330);
+
+            the_games.innerHTML = 'The games are "' + games.join('", "') + '".';
 
             function setup_buttons() {
                 document.getElementById("next").addEventListener("click", function(){
