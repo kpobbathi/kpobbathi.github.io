@@ -74,6 +74,9 @@
                     if (game + 1 <= games.length) {
                         game++;
                     }
+                    else {
+                        game = 1;
+                    }
                 });
             }
 
@@ -406,8 +409,8 @@
                 textFont("serif")
             }
 
-            if (game = 1) {
-                function draw() {
+            function draw() {
+                if (game === 1) {
                     background(0, 200, 255);
                     noStroke();
 
@@ -421,8 +424,10 @@
                         draw_scene_3();
                     }
                 }
+            }
 
-                function mouseClicked() {
+            function mouseClicked() {
+                if (game === 1) {
                     if (mouseX >= sides1.x1 && mouseX <= sides1.x2 && mouseY >= sides1.y1 && mouseY <= sides1.y2) {
                         if (stop_start1 === true) {
                             stop_start1 = false;
@@ -435,6 +440,7 @@
                     }
                 }
             }
+            
         </script>
 
         <button id="next">Next Game</button>
