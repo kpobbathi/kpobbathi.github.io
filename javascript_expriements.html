@@ -14,21 +14,18 @@
             h1 {
                 text-shadow: 1px 1px 0 #ccc, 2px 2px 0 #c9c9c9, 3px 3px 0 #bbb, 4px 4px 0 #b9b9b9, 5px 5px 0 #aaa, 6px 6px 1px rgba(0,0,0,.1);
             }
-            h2 {
-                text-shadow: 0 0 10px rgba(50, 50, 50, 0.8);
-            }
             button {
                 background-color: red;
                 border: 5px ridge black;
                 margin: 20px;
                 margin-left: 185px;
                 font-family: 'Times New Roman', Times, serif;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             }
         </style>
     </head>
     <body>
-        <h1>My Javascript Experiments</h1>
-        <h2 id="title_">Block The Fish</h2>
+        <h1>My Javascript Games</h1>
         <p id="text_">This is my game called <em><strong>"Block the Fish"</strong></em>. It is a game where you are trying to block the fish with the blocker.</p>
 
         <p id="games"></p>
@@ -55,7 +52,7 @@
             let scene = 1;
             let never_ending;
             let level = 1;
-            let the_games = document.getElementById("games")
+            const the_games = document.getElementById("games")
 
             function X_and_y(x1, y1, x2, y2) {
                 this.x1 = x1;

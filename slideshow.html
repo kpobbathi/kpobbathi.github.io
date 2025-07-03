@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEGO Robot Slideshow</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slideshow-container {
+            width: 75vw;
+            height: 75vh;
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: calc(100% - 100px);
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: white;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .slide-counter {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 20;
+        }
+
+        .controls-area {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+
+        .controls {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 0 10px;
+            cursor: pointer;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .indicators {
+            text-align: center;
+            padding: 10px 10px 20px 10px;
+        }
+
+        .dot {
+            height: 15px;
+            width: 15px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active, .dot:hover {
+            background-color: #667eea;
+            transform: scale(1.2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #f0f0f0;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="slideshow-container">
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">3</span>
+        </div>
+        
+        <div class="slide active">
+            <img id="robot-image-1" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500' viewBox='0 0 800 500'%3E%3Crect width='800' height='500' fill='%234a90e2'/%3E%3Ctext x='400' y='250' font-family='Arial' font-size='24' fill='white' text-anchor='middle' dy='0.3em'%3EImage 1%3C/text%3E%3C/svg%3E" alt="LEGO Robot Image 1">
+        </div>
+        
+        <div class="slide">
+            <img id="robot-image-2" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500' viewBox='0 0 800 500'%3E%3Crect width='800' height='500' fill='%2350c878'/%3E%3Ctext x='400' y='250' font-family='Arial' font-size='24' fill='white' text-anchor='middle' dy='0.3em'%3EImage 2%3C/text%3E%3C/svg%3E" alt="LEGO Robot Image 2">
+        </div>
+        
+        <div class="slide">
+            <img id="robot-image-3" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500' viewBox='0 0 800 500'%3E%3Crect width='800' height='500' fill='%23ff6b6b'/%3E%3Ctext x='400' y='250' font-family='Arial' font-size='24' fill='white' text-anchor='middle' dy='0.3em'%3EImage 3%3C/text%3E%3C/svg%3E" alt="LEGO Robot Image 3">
+        </div>
+
+        <div class="controls-area">
+            <div class="controls">
+                <button class="btn" id="prevBtn">❮ Previous</button>
+                <button class="btn" id="playPauseBtn">⏸️ Pause</button>
+                <button class="btn" id="nextBtn">Next ❯</button>
+            </div>
+
+            <div class="indicators">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ImageSlideshow {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.dots = document.querySelectorAll('.dot');
+                this.currentSlide = 0;
+                this.isPlaying = true;
+                this.slideInterval = null;
+                this.slideDuration = 4000;
+                this.progressInterval = null;
+                
+                this.init();
+            }
+
+            init() {
+                // Button event listeners
+                document.getElementById('prevBtn').addEventListener('click', () => this.previousSlide());
+                document.getElementById('nextBtn').addEventListener('click', () => this.nextSlide());
+                document.getElementById('playPauseBtn').addEventListener('click', () => this.togglePlayPause());
+
+                // Dot indicators
+                this.dots.forEach(dot => {
+                    dot.addEventListener('click', (e) => {
+                        this.goToSlide(parseInt(e.target.dataset.slide));
+                    });
+                });
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.previousSlide();
+                    if (e.key === 'ArrowRight') this.nextSlide();
+                    if (e.key === ' ') {
+                        e.preventDefault();
+                        this.togglePlayPause();
+                    }
+                });
+
+                // Start autoplay
+                this.startAutoplay();
+                this.updateSlideCounter();
+            }
+
+            showSlide(slideIndex) {
+                // Hide all slides and deactivate dots
+                this.slides.forEach(slide => slide.classList.remove('active'));
+                this.dots.forEach(dot => dot.classList.remove('active'));
+
+                // Show current slide and activate corresponding dot
+                this.slides[this.currentSlide].classList.add('active');
+                this.dots[this.currentSlide].classList.add('active');
+                
+                this.updateSlideCounter();
+                this.resetProgress();
+            }
+
+            nextSlide() {
+                this.currentSlide++;
+                if (this.currentSlide >= this.slides.length) {
+                    this.currentSlide = 0;
+                }
+                this.showSlide(this.currentSlide);
+                if (this.isPlaying) {
+                    this.startAutoplay();
+                }
+            }
+
+            previousSlide() {
+                this.currentSlide--;
+                if (this.currentSlide < 0) {
+                    this.currentSlide = this.slides.length - 1;
+                }
+                this.showSlide(this.currentSlide);
+                if (this.isPlaying) {
+                    this.startAutoplay();
+                }
+            }
+
+            goToSlide(slideIndex) {
+                this.currentSlide = slideIndex;
+                this.showSlide(this.currentSlide);
+                if (this.isPlaying) {
+                    this.startAutoplay();
+                }
+            }
+
+            startAutoplay() {
+                this.stopAutoplay();
+                
+                this.slideInterval = setInterval(() => {
+                    this.nextSlide();
+                }, this.slideDuration);
+
+                this.startProgress();
+            }
+
+            stopAutoplay() {
+                if (this.slideInterval) {
+                    clearInterval(this.slideInterval);
+                    this.slideInterval = null;
+                }
+                if (this.progressInterval) {
+                    clearInterval(this.progressInterval);
+                    this.progressInterval = null;
+                }
+            }
+
+            togglePlayPause() {
+                const btn = document.getElementById('playPauseBtn');
+                if (this.isPlaying) {
+                    this.stopAutoplay();
+                    btn.textContent = '▶️ Play';
+                    this.isPlaying = false;
+                } else {
+                    this.startAutoplay();
+                    btn.textContent = '⏸️ Pause';
+                    this.isPlaying = true;
+                }
+            }
+
+            updateSlideCounter() {
+                document.getElementById('current-slide').textContent = this.currentSlide + 1;
+                document.getElementById('total-slides').textContent = this.slides.length;
+            }
+
+            startProgress() {
+                const progressBar = document.getElementById('progress');
+                let width = 0;
+                const increment = 100 / (this.slideDuration / 100);
+
+                this.progressInterval = setInterval(() => {
+                    width += increment;
+                    progressBar.style.width = width + '%';
+                    
+                    if (width >= 100) {
+                        width = 0;
+                    }
+                }, 100);
+            }
+
+            resetProgress() {
+                const progressBar = document.getElementById('progress');
+                progressBar.style.width = '0%';
+                
+                if (this.progressInterval) {
+                    clearInterval(this.progressInterval);
+                    this.progressInterval = null;
+                }
+                
+                if (this.isPlaying) {
+                    this.startProgress();
+                }
+            }
+        }
+
+        // Initialize slideshow when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new ImageSlideshow();
+            
+            // Load robot images
+            loadRobotImages();
+        });
+
+        function loadRobotImages() {
+            const imageFiles = ['robot1.jpg', 'robot2.jpg', 'robot3.jpg'];
+            const imageElements = ['robot-image-1', 'robot-image-2', 'robot-image-3'];
+            
+            imageFiles.forEach((filename, index) => {
+                const img = document.getElementById(imageElements[index]);
+                const testImg = new Image();
+                testImg.onload = function() {
+                    img.src = filename;
+                };
+                testImg.onerror = function() {
+                    console.log(`${filename} not found - using placeholder`);
+                };
+                testImg.src = filename;
+            });
+        }
+    </script>
+</body>
+</html>
