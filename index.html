@@ -13,28 +13,33 @@
             }
             a:hover {
                 background-color: lightblue;
-                position: relative;
             }
             #image {
                 border: 6px ridge royalblue;
                 margin-left: 75px;
             }
-            h1, #text__, h2{
+            h1, h2{
                 text-align: center;
             }
             .link {
-                float: right;
+                position: fixed;
+                right: 20px;
+            }
+            #link1 {
+                top: 20px;
+            }
+            #link2 {
+                top: 40px;
             }
         </style>
     </head>
     <body>
 
-        <a class="link" target="_blank" href="file:///Users/krishnapobbathi/my_projects/my_website/kpobbathi.github.io/javascript_expriements.html">Look at my javascript games!</a>
+        <a class="link" id ="link1" target="_blank" href="file:///Users/krishnapobbathi/my_projects/my_website/kpobbathi.github.io/javascript_expriements.html">Look at my javascript games!</a>
         <br>
-        <a class="link" target="_blank" href="file:///Users/krishnapobbathi/my_projects/my_website/kpobbathi.github.io/my_art.html">Look at my artwork!</a>
+        <a class="link" id="link2" target="_blank" href="file:///Users/krishnapobbathi/my_projects/my_website/kpobbathi.github.io/my_art.html">Look at my artwork!</a>
 
         <h1>My Website</h1>
-        <p id="text__">In these links, you can learn a lot about me.</p>
 
         <h2>About me</h2>
 
@@ -44,13 +49,19 @@
                 <li>In 4th grade, I qualified for the IMC round II. In 5th grade, I got a bronze medal in the IMC round II.</li>
                 <li>In 5th grade, I got 1st prize in the Alta Vista Science Fair for 5th grade.</li>
             </ul> <br>
-        <a href="file:///Users/krishnapobbathi/my_projects/my_website/kpobbathi.github.io/slideshow.html">My robot which I used for the science fair</a> <br>
-        <a>My science fair project.</a>
-        <iframe>
+        <a target="_blank" href="file:///Users/krishnapobbathi/my_projects/my_website/kpobbathi.github.io/slideshow.html">My robot which I used for the science fair</a> <br>
+        <a>My science fair project.</a> <br>
+        <iframe
             width="560"
             height="315"
-
-        </iframe>
+            src="https://www.youtube.com/embed/4R8nnT728FM?si=LFwMKxgVXeuB4wGC&amp;start=960"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+        </iframe> <br>
+        <em>16:00 is when my sister's presentation is. Go to 17:30 to see my presentation.</em>
         </p>
         <p class="Personal_Info">My favorite
             <ul>
