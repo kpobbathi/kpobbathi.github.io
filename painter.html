@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Painter App</title>
+        <meta charset="utf-8">
+        <style>
+            body {
+                font-family: 'Times New Roman', Times, serif;
+                margin: 0;
+                padding: 20px;
+            }
+            #color_reply {
+                width: 145px;
+                height: 20px;
+                border: 2px solid black;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                background-color: rgba(0, 0, 0, 1);
+            }
+            .dot {
+                position: absolute;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1000;
+            }
+            .controls {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                padding: 15px;
+                border: 2px solid black;
+                border-radius: 10px;
+                z-index: 2000;
+                width: 200px;
+            }
+            
+            #canvas-area {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                cursor: crosshair;
+            }
+            .input-group {
+                margin-bottom: 10px;
+            }
+            input {
+                margin: 2px;
+                padding: 3px;
+                width: 50px;
+            }
+            button {
+                margin: 5px;
+                padding: 8px 12px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="canvas-area"></div>
+        <div class="controls">
+            <h3>🎨 Painter App</h3>
+            <p><small>Click and drag to paint!</small></p>
+            
+            <div class="input-group">
+                <label>Size (pixels):
+                    <input id="size" type="number" value="10" min="1" max="100">
+                </label>
+            </div>
+            
+            <div class="input-group">
+                <label>RGBA Color Values:</label><br>
+                R: <input id="r" type="number" value="255" min="0" max="255"><br>
+                G: <input id="g" type="number" value="0" min="0" max="255"><br>
+                B: <input id="b" type="number" value="0" min="0" max="255"><br>
+                A: <input id="a" type="number" value="1" min="0" max="1" step="0.1">
+            </div>
+            
+            <div id="color_reply"></div>
+            <button id="button_" type="button">Clear Canvas</button>
+        </div>
+
+        <script>
+            const clear = document.getElementById("button_");
+            const canvasArea = document.getElementById("canvas-area");
+            const colorPreview = document.getElementById("color_reply");
+            
+            let size = 10;
+            let r = 255;
+            let g = 0;
+            let b = 0;
+            let a = 1;
+            let isDrawing = false;
+
+            function updatePaintSettings() {
+                size = parseInt(document.getElementById("size").value) || 10;
+                r = parseInt(document.getElementById("r").value) || 0;
+                g = parseInt(document.getElementById("g").value) || 0;
+                b = parseInt(document.getElementById("b").value) || 0;
+                a = parseFloat(document.getElementById("a").value) || 1;
+                
+                colorPreview.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+            }
+
+            updatePaintSettings();
+
+            function createDot(x, y) {
+                let dot = document.createElement("div");
+                dot.className = "dot";
+                document.body.appendChild(dot);
+                
+                dot.style.width = size + "px";
+                dot.style.height = size + "px";
+                dot.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+                dot.style.top = (y - size/2) + "px";
+                dot.style.left = (x - size/2) + "px";
+            }
+
+            canvasArea.addEventListener("mousedown", function(e) {
+                isDrawing = true;
+                createDot(e.clientX, e.clientY);
+                /*
+                createDot(e.clientX + (size / 4), e.clientY + (size / 4));
+                createDot(e.clientX + (size / 4), e.clientY);
+                createDot(e.clientX + (size / 4), e.clientY - (size / 4));
+                createDot(e.clientX, e.clientY + (size / 4));
+                createDot(e.clientX, e.clientY - (size / 4));
+                createDot(e.clientX - (size / 4), e.clientY + (size / 4));
+                createDot(e.clientX - (size / 4), e.clientY);
+                createDot(e.clientX - (size / 4), e.clientY - (size / 4));
+                //*/
+                e.preventDefault();
+            });
+
+            canvasArea.addEventListener("mousemove", function(e) {
+                if (isDrawing) {
+                    createDot(e.clientX, e.clientY);
+                    /*
+                    createDot(e.clientX + (size / 4), e.clientY + (size / 4));
+                    createDot(e.clientX + (size / 4), e.clientY);
+                    createDot(e.clientX + (size / 4), e.clientY - (size / 4));
+                    createDot(e.clientX, e.clientY + (size / 4));
+                    createDot(e.clientX, e.clientY - (size / 4));
+                    createDot(e.clientX - (size / 4), e.clientY + (size / 4));
+                    createDot(e.clientX - (size / 4), e.clientY);
+                    createDot(e.clientX - (size / 4), e.clientY - (size / 4));
+                    //*/
+                }
+            });
+
+            canvasArea.addEventListener("mouseup", function() {
+                isDrawing = false;
+            });
+
+            canvasArea.addEventListener("mouseleave", function() {
+                isDrawing = false;
+            });
+
+            clear.addEventListener("click", function() {
+                const dots = document.getElementsByClassName("dot");
+                while(dots.length > 0) {
+                    dots[0].remove();
+                }
+            });
+
+            document.getElementById("r").addEventListener("input", updatePaintSettings);
+            document.getElementById("g").addEventListener("input", updatePaintSettings);
+            document.getElementById("b").addEventListener("input", updatePaintSettings);
+            document.getElementById("a").addEventListener("input", updatePaintSettings);
+            document.getElementById("size").addEventListener("input", updatePaintSettings);
+        </script>
+    </body>
+</html>

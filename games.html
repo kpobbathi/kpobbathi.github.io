@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Krishna's Programming</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+        <link rel="stylesheet" href="basic_styles.css">
+        <style>
+            body {
+                margin-left: 25px;
+            }
+            canvas {
+                border: 3px solid #000000;
+                border-radius: 5px;
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+            }
+            button {
+                background-color: red;
+                border: 5px ridge black;
+                margin: 20px;
+                margin-left: 370px;
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 1em;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                width: auto;
+                height: auto;
+            }
+            button:hover {
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="link">
+            <a class="link" target="_blank" href="index.html">About Me</a>
+            <br>
+            <a class="link" style="color: blue;" href="">Games</a>
+            <br>
+            <a class="link" target="_blank" href="my_art.html">Artwork</a>
+            <br>
+            <a class="link" target="_blank" href="painter.html">Painter App</a>
+            <br>
+            <a class="link" target="_blank" href="science_fair.html">Science Fair</a>
+        </div>
+        <div id="main_container">
+            <h1>My Games</h1>
+            <p>I made these games myself.</p>
+            <p id="text_"></p>
+
+            <p id="games"></p>
+
+            <script>
+                let game = 1;
+                let fish_color;
+                const fish_size = [75, 50];
+                let fish_speed = 5;
+                const bubble_size = 10;
+                let x = 0;
+                let x1;
+                let y;
+                let y1;
+                let blocker_y;
+                const blocker_speed = 5;
+                let score = 0;
+                let game_ended = false;
+                let stop_start1 = true;
+                let scene = 1;
+                let never_ending;
+                let level = 1;
+                const the_games = document.getElementById("games");
+                let scale_num = 2.0;
+                let canvas_size = 400 * scale_num
+
+                function X_and_y(x1, y1, x2, y2) {
+                    this.x1 = x1;
+                    this.y1 = y1;
+                    this.x2 = x2;
+                    this.y2 = y2;
+                }
+
+                let sides = new X_and_y(17, 342, 113, 368);
+                let sides1 = new X_and_y(325, 342, 390, 368);
+                let b1 = new X_and_y(120, 120, 280, 180);
+                let b2 = new X_and_y(120, 195, 280, 255);
+                let b3 = new X_and_y(120, 270, 280, 330);
+                let b4 = new X_and_y(30, 112.5, 120, 350);
+                let b5 = new X_and_y(280, 112.5, 370, 330);
+
+                let games = {
+                    "Block the fish" : "This is my game called <em><strong> Block the Fish.</strong><em> It is a game where you are trying to block the fish with the blocker."
+                }
+
+                let keys = Object.keys(games);
+                let values = Object.values(games);
+                let reply = document.getElementById("text_");
+                the_games.innerHTML = 'The games currently are "' + keys.join('", "') + '".';
+
+                function positionButton() {
+                    const next_button = document.getElementById("next");
+                    const leftPosition = (document.documentElement.clientWidth / 2) - (next_button.offsetWidth / 2)
+                    next_button.style.marginLeft = leftPosition + "px";
+                    
+                }
+
+                function setup_buttons() {
+                    let next_button = document.getElementById("next");
+                    
+                    next_button.addEventListener("click", function(){
+                        if (game + 1 <= keys.length) {
+                            game++;
+                        }
+                        else {
+                            game = 1;
+                        }
+                        reply.innerHTML()
+                    });
+                    
+                }
+
+                function handle_button (func, b) {
+                    let scaledMouseX = mouseX / scale_num
+                    let scaledMouseY = mouseY / scale_num
+
+                    if (scaledMouseX >= b.x1 && scaledMouseX <= b.x2 && scaledMouseY >= b.y1 && scaledMouseY <= b.y2) {
+                        func();
+                    }
+                }
+
+                function setup_fish() {
+                    x1 = random(0, 300);
+                    y = random(50, 350);
+                    y1 = y;
+                    blocker_y = 175;
+                    change_color();
+                    while (y + 25 >= blocker_y && y - 75 <= blocker_y) {
+                        y = random(50, 350);
+                    }
+                }
+
+                function randomize() {
+                    y = random(50, 350);
+                    while (y + 25 >= blocker_y && y - 75 <= blocker_y) {
+                        y = random(50, 350);
+                    }
+                }
+
+                function randomize1() {
+                    x1 = random(0, 300);
+                    y1 = y;
+                }
+
+                function change_color() {
+                    fish_color = color(random(100, 255), random(100, 255), random(100, 255));
+                }
+
+                function draw_bubbles(x, y) {
+                    stroke(255, 255, 255);
+                    strokeWeight(3);
+                    noFill();
+                    ellipse(x1 + 50, y1 - 5, bubble_size, bubble_size);
+                }
+
+                function draw_fish(x, y) {
+                    noStroke();
+                    fill(fish_color);
+                    ellipse(x, y, fish_size[0], fish_size[1]);
+                    let tail_width = fish_size[0]/2;
+                    let tail_height = fish_size[1]/4;
+                    triangle(x - fish_size[0]/2 + 3, y, x - fish_size[0]/2 - tail_width, y - tail_height, x - fish_size[0]/2 - tail_width, y + tail_height);
+                    fill(33, 33, 33);
+                    ellipse(x + fish_size[0]/4, y, fish_size[0]/5, fish_size[1]/5);
+                    
+                    if (fish_color === color(255, 255, 255)) {
+                        fill(0, 0, 0);
+                        textSize(16);
+                        text("This rare fish is worth 10 points!", x - 100, y - 40);
+                    }
+                }
+
+                function draw_kelp(x, height) {
+                    stroke(0, 150, 0);
+                    strokeWeight(4);
+                    line(x, 400, x, 400 - height);
+                }
+
+                function draw_restart_button() {
+                    rectMode(CORNERS)
+                    stroke(0, 0, 0);
+                    strokeWeight(3);
+                    fill(255, 255, 255);
+                    rect(sides.x1, sides.y1, sides.x2, sides.y2);
+                    fill(0, 0, 0);
+                    noStroke();
+                    textSize(14);
+                    text("PLAY AGAIN", 23, 360);
+                }
+
+                function draw_stop_button() {
+                    rectMode(CORNERS)
+                    stroke(0, 0, 0);
+                    strokeWeight(3);
+                    fill(255, 255, 255);
+                    rect(sides1.x1, sides1.y1, sides1.x2, sides1.y2);
+                    fill(0, 0, 0);
+                    noStroke();
+                    textSize(16);
+                    text("PAUSE", sides1.x1 + 8, sides1.y1 + 5, 55, 100);
+                }
+
+                function draw_blocker(y) {
+                    noStroke();
+                    fill(255, 150, 0);
+                    rect(375, y, 10, 50);
+                    
+                    if (keyIsPressed) {
+                        if (keyCode === UP_ARROW) {
+                            if (blocker_y > 0) {
+                                blocker_y -= blocker_speed;
+                            }
+                        }
+                        if (keyCode === DOWN_ARROW) {
+                            if (blocker_y < 350) {
+                                blocker_y += blocker_speed;
+                            }
+                        }
+                    }
+                }
+
+                function draw_scene_1() {
+                    background(0, 0, 0);
+                    
+                    rectMode(CORNER);
+                    draw_stop_button();
+                    rectMode(CENTER);
+                    
+                    fill(255, 0, 0);
+                    textSize(35);
+                    text("Block the Fish", 30, 75);
+                    draw_fish(350, 60);
+                    change_color();
+                    
+                    fill(0, 0, 0);
+                    stroke(255, 0, 0);
+                    strokeWeight(5);
+                    
+                    for (let k = 0; k < 3; k++) {
+                        rect(200, 150 + k*75, 150, 50);
+                    }
+                    
+                    let scaledMouseX = mouseX / scale_num;
+                    let scaledMouseY = mouseY / scale_num;
+                    
+                    if (mouseIsPressed) {
+                        handle_button(function() {
+                            scene = 2;
+                        }, b1)
+
+                        handle_button(function() {
+                            fish_speed *= 2;
+                            scene = 2;
+                        }, b2)
+
+                        handle_button(function() {
+                            fish_speed *= 3;
+                            scene = 2;
+                        }, b3)
+                    }
+                    fill(255, 0, 0);
+                    noStroke();
+                    text("Easy", 170, 160);
+                    text("Medium", 142.5, 235);
+                    text("Hard", 170, 310);
+                }
+
+                function draw_scene_2() {
+                    background(0, 0, 0);
+                    
+                    rectMode(CORNER);
+                    draw_stop_button();
+                    rectMode(CENTER);
+                    
+                    fill(255, 0, 0);
+                    textSize(35);
+                    text("Block the Fish", 30, 75);
+                    draw_fish(350, 60);
+                    change_color();
+                    
+                    fill(0, 0, 0);
+                    stroke(255, 0, 0);
+                    strokeWeight(5);
+                    
+                    rectMode(CORNERS);
+                    rect(b4.x1, b4.y1, b4.x2, b4.y2);
+                    rect(b5.x1, b5.y1, b5.x2, b5.y2);
+                    
+                    fill(255, 0, 0);
+                    noStroke();
+                    textSize(28);
+                    text("N O  R M A    L", 62, 130, 50, 300);
+                    
+                    textSize(14);
+                    text("N E V E R E N D I N G", 320, 130, 19, 300);
+                    
+                    let scaledMouseX = mouseX / scale_num;
+                    let scaledMouseY = mouseY / scale_num;
+                    
+                    if (mouseIsPressed) {
+                        handle_button(function() {
+                            never_ending = false;
+                            if (scene === 2) {
+                                scene = 3;
+                            }
+                        }, b4)
+
+                        handle_button(function() {
+                            never_ending = true;
+                            scene = 3;
+                        }, b5)
+                    }
+                }
+
+                function draw_scene_3() {
+                    rectMode(CORNER);
+                    noStroke();
+                    
+                    fill(0, 0, 0);
+                    textSize(16);
+                    text("Score:", 10, 20);
+                    if (never_ending === false) {
+                        text("To beat the game, get 150 points.", 160, 20);
+                        text("Level " + level + "/5", 75, 20);
+                        textSize(12);
+                        text("Use the up and down arrows to control the blocker.", 123, 40);
+                        text("The pause button will save your progress.", 172, 60);
+                    }
+                    else {
+                        textSize(14);
+                        text("Use the up and down arrows to control the blocker.", 123-25, 20);
+                        text("The pause button will save your progress.", 172-25, 40);
+                    }
+                    fill(255, 0, 0);
+                    textSize(30);
+                    text(score, 14, 55);
+                    
+                    draw_kelp(50, 170);
+                    draw_kelp(25, 145);
+                    draw_kelp(75, 145);
+                    draw_kelp(100, 120);
+                    draw_kelp(125, 70);
+                    draw_kelp(150, 95);
+                    draw_kelp(200, 70);
+                    draw_kelp(250, 120);
+                    draw_kelp(275, 145);
+                    draw_kelp(300, 170);
+                    draw_kelp(325, 95);
+                    draw_kelp(350, 120);
+                    
+                    noStroke();
+                    fill(255, 220, 0);
+                    rect(-1, 370, 402, 51);
+                    
+                    draw_blocker(blocker_y);
+                    draw_fish(x, y);
+                    draw_stop_button();
+                    
+                    if (score < 31) {
+                        x += fish_speed;
+                        level = 1;
+                    }
+                    else if (score > 30 && score < 61) {
+                        x += fish_speed * 3/2;
+                        level = 2;
+                    }
+                    else if (score > 60 && score < 91) {
+                        x += fish_speed * 12/5;
+                        level = 3;
+                    }
+                    else if (score > 90 && score < 121) {
+                        x += fish_speed * 4;
+                        level = 4;
+                    }
+                    else {
+                        x += fish_speed * 5;
+                        level = 5;
+                    }
+                    
+                    if (y1 < 0) {
+                        randomize1();
+                        x1 = x;
+                    }
+                    
+                    draw_bubbles(x1, y1);
+                    y1 -= 5;
+                    
+                    if (y <= blocker_y + 75 && y >= blocker_y - 25 && x + 50 >= 375) {
+                        if (fish_color === color(255, 255, 255)) {
+                            score += 10;
+                        }
+                        else {
+                            score++;
+                        }
+                        
+                        x = 0;
+                        randomize();
+                        change_color();
+                    }
+                    
+                    if (game_ended === true || never_ending === true) {
+                        draw_restart_button();
+                        
+                        if (mouseIsPressed) {
+                            handle_button(function() {
+                                score = 0;
+                                blocker_y = 175;
+                                randomize();
+                                x = 0;
+                                change_color();
+                                scene = 1;
+                                fish_speed = 5;
+                            }, sides)
+                            
+                        }
+                    }
+                    
+                    if (x >= 400) {
+                        change_color();
+                        x = 0;
+                        randomize();
+                    }
+                    
+                    if (never_ending === false) {
+                        if (score >= 150) {
+                            game_ended = true;
+                            textSize(35);
+                            text("You beat the game!", 50, 200);
+                        }
+                        else {
+                            game_ended = false;
+                        }
+                    }
+                }
+
+                function setup() {
+                    createCanvas(canvas_size, canvas_size);
+                    
+                    let canvas = document.querySelector('canvas');
+                    canvas.tabIndex = 1;
+                    canvas.style.outline = 'none';
+                    
+                    canvas.addEventListener('keydown', function(e) {
+                        if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                            e.preventDefault();
+                        }
+                    });
+
+                    const left_position = (document.documentElement.clientWidth / 2) - (canvas_size / 2);
+                    canvas.style.marginLeft = left_position + "px";
+        
+                    setup_buttons();
+                    setup_fish();
+                    
+                    setTimeout(positionButton, 100);
+                    
+                    textFont('serif');
+                }
+
+                function draw() {
+                    scale(scale_num);
+                    
+                    if (game === 1) {
+                        background(0, 200, 255);
+                        noStroke();
+
+                        if (scene === 1) {
+                            draw_scene_1();
+                        }
+                        else if (scene === 2) {
+                            draw_scene_2();
+                        }
+                        else if (scene === 3) {
+                            draw_scene_3();
+                        }
+                    }
+                }
+
+                function mouseClicked() {
+                    if (game === 1) {
+                        let scaledMouseX = mouseX / scale_num;
+                        let scaledMouseY = mouseY / scale_num;
+
+                        handle_button(function() {
+                            if (stop_start1 === true) {
+                                stop_start1 = false;
+                                noLoop();
+                            }
+                            else if (stop_start1 === false) {
+                                stop_start1 = true;
+                                loop();
+                            }
+                        }, sides1)
+                    }
+                }
+                
+            </script>
+
+            <button id="next">Next Game</button>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                let links = document.getElementsByClassName("link");
+                
+                for (let i = 0; i < links.length; i++) {
+                    links[i].style.left = ((i + 1) * (100 / (links.length + 1))) + "%";
+                }
+
+            });
+        </script>
+    </body>
+</html>
