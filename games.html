@@ -32,15 +32,15 @@
     </head>
     <body>
         <div id="link">
-            <a class="link" target="_blank" href="index.html">About Me</a>
+            <a class="link" href="index.html">About Me</a>
             <br>
             <a class="link" style="color: blue;" href="">Games</a>
             <br>
-            <a class="link" target="_blank" href="my_art.html">Artwork</a>
+            <a class="link" href="my_art.html">Artwork</a>
             <br>
             <a class="link" target="_blank" href="painter.html">Painter App</a>
             <br>
-            <a class="link" target="_blank" href="science_fair.html">Science Fair</a>
+            <a class="link" href="science_fair.html">Science Fair</a>
         </div>
         <div id="main_container">
             <h1>My Games</h1>
@@ -511,7 +511,7 @@
                 let links = document.getElementsByClassName("link");
                 
                 for (let i = 0; i < links.length; i++) {
-                    links[i].style.left = ((i + 1) * (100 / (links.length + 1))) + "%";
+                    links[i].style.left = (((i + 1) * (100 / (links.length + 1))) - 1.5) + "%";
                 }
 
             });

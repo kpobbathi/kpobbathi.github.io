@@ -8,12 +8,20 @@
             h1 {
                 font-size: 3em;
             }
-            a:hover {
-                background-color: lightblue;
-            }
             #image {
                 border: 6px ridge royalblue;
                 margin-left: 75px;
+            }
+            #art a{
+                float: right;
+                margin-right: 100px;
+                font-size: 1.5em;
+            }
+            #art h1{
+                font-size: 2em;
+            }
+            #art {
+                border-top: 4px solid blue;
             }
         </style>
     </head>
@@ -22,13 +30,13 @@
         <div id="link">
             <a class="link" style="color: blue;" href="">About Me</a>
             <br>
-            <a class="link" target="_blank" href="games.html">Games</a>
+            <a class="link" href="games.html">Games</a>
             <br>
-            <a class="link" target="_blank" href="my_art.html">Artwork</a>
+            <a class="link" href="my_art.html">Artwork</a>
             <br>
             <a class="link" target="_blank" href="painter.html">Painter App</a>
             <br>
-            <a class="link" target="_blank" href="science_fair.html">Science Fair</a>
+            <a class="link" href="science_fair.html">Science Fair</a>
         </div>
 
         <div id="main_container">
@@ -77,9 +85,6 @@
                     <li>5th grade: I got 1st prize. I also got an innovative project award.</li>
                 </ul></li>
             </ul>
-            <h2>Friends</h2>
-            <em>Notify me if you would like to be added to my friends list.</em>
-            <ul>
 
             </ul>
             <h2>Family</h2>
@@ -89,13 +94,17 @@
                 <li>My younger sister, Durga <br><a target="_blank">Click here to go to her website.</a>
                 </li>
             </ul>
+            <div id="art">
+                <h1>My Art</h1>
+                <img><img><a href="my_art.html">See More</a>
+            </div>
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 let links = document.getElementsByClassName("link");
                 
                 for (let i = 0; i < links.length; i++) {
-                    links[i].style.left = ((i + 1) * (100 / (links.length + 1))) + "%";
+                    links[i].style.left = (((i + 1) * (100 / (links.length + 1))) - 1.5) + "%";
                 }
 
             });

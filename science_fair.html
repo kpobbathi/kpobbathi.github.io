@@ -21,27 +21,28 @@
     </head>
     <body>
         <div id="link">
-            <a class="link" target="_blank" href="index.html">About Me</a>
+            <a class="link" href="index.html">About Me</a>
             <br>
-            <a class="link" target="_blank" href="games.html">Games</a>
+            <a class="link" href="games.html">Games</a>
             <br>
-            <a class="link" target="_blank" href="my_art.html">Artwork</a>
+            <a class="link" href="my_art.html">Artwork</a>
             <br>
             <a class="link" target="_blank" href="painter.html">Painter App</a>
             <br>
             <a class="link" style="color: blue;" href="">Science Fair</a>
         </div>
-        
+
         <div id="main_container">
             <h1>Science Fairs</h1>
             <p>I have participated in science fairs such as in 3rd grade and 5th grade. A science fair is an event hosted by a school that offers students the opportunity to experience the practices of science an engineering for themselves.
                 The basic idea is that a science fair is a contest that involves science. Different people or teams compete to see whose project is better and to expand their knowledge in science.
             </p>
             <h2>Alta Vista Elementary School Science Fair of 2025</h2>
-            <em>An interview between everyone who participated in the science fair.<br>16:00 is when my sister's presentation is. Go to 17:30 to see my presentation.</em> <br>
+            <em>An interview between everyone who participated in the science fair.<br>16:00 is when my sister's presentation is. 17:30 is my presentation.</em> <br>
             <iframe
-                width="300"
-                src="https://www.youtube.com/embed/4R8nnT728FM?si=LFwMKxgVXeuB4wGC&amp;start=960"
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/4R8nnT728FM?si=_8dq2fYds0V2eQ5o&amp;start=1050"
                 title="YouTube video player"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -51,14 +52,17 @@
             <p id="sci-writing">I was on a trip in Costa Rica, when my mom told me that I was invited to be in the Alta Vista's first ever science fair. I was pretty excited.
                 My mom told me that I had to fill in a form about my science intrests first, so they could decide what kind of mentor I would get. I filled in physics, coding, robotics, and AI.
                 I spent some time thinking about what my project should be. I had a Mindstorms lego robotics kit, so I was going to use that. I first thought about some robot that could navigate a course and obstacles.
-                Then, I decided that I was going to make a robot that automatically aim at a target, as long as the robot is in range.</p>
+                I had a small lego gun, so I decided that I was going to make a robot that automatically aim at a target, as long as the robot is in range. After we got back from the trip, I started working on building my robot.
+                I had to adjust some things, because things didn't always go the way I planned it. Eventually, I managed to create a <a target="_blank" href="slideshow.html">robot.</a> Click on the link to see my robot. As you can see,
+                it has 2 motors to adjust the angle of the projectile, 1 motor to shoot it, and a distance sensor to measure the range of it. The big lego in the back (the gun is in the front) is the hub. The hub had all the electricity,
+                programming, and it connects everything together.</p>
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 let links = document.getElementsByClassName("link");
                 
                 for (let i = 0; i < links.length; i++) {
-                    links[i].style.left = ((i + 1) * (100 / (links.length + 1))) + "%";
+                    links[i].style.left = (((i + 1) * (100 / (links.length + 1))) - 1.5) + "%";
                 }
 
             });

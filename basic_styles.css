@@ -1,6 +1,7 @@
 body {
     font-family: 'Times New Roman', Times, serif;
     margin-left: 20px;
+    margin-bottom: 20px;
     z-index: 1;
     position: relative;
     background-color: rgba(0, 150, 255, 0.15);
@@ -31,4 +32,7 @@ h1, h2 {
 }
 #main_container {
     margin-top: 50px;
+}
+a:hover {
+    background-color: lightblue;
 }
