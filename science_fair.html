@@ -1,71 +1,84 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Science Fair</title>
-        <link rel="stylesheet" href="basic_styles.css">
-        <style>
-            iframe {
-                float: left;
-                border: 5px ridge rgb(0, 50, 0);
-                width: 500px;
-                height: 400px;
-                margin-bottom: 6px;
-                margin-right: 6px;
-                margin-top: 6px;
-            }
-            #sci-writing {
-                margin-top: 0px;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="link">
-            <a class="link" href="index.html">About Me</a>
-            <br>
-            <a class="link" href="games.html">Games</a>
-            <br>
-            <a class="link" href="my_art.html">Artwork</a>
-            <br>
-            <a class="link" target="_blank" href="painter.html">Painter App</a>
-            <br>
-            <a class="link" style="color: blue;" href="">Science Fair</a>
-        </div>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Fair</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="basic_styles.css">
+    <style>
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.25rem;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .video-caption {
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-top: -0.5rem;
+            margin-bottom: 1.25rem;
+        }
+    </style>
+</head>
+<body>
 
-        <div id="main_container">
+    <nav>
+        <a href="index.html">About Me</a>
+        <a href="games.html">Games</a>
+        <a href="my_art.html">Artwork</a>
+        <a href="" class="active">Science Fair</a>
+    </nav>
+
+    <div id="main_container">
+
+        <div class="hero">
             <h1>Science Fairs</h1>
-            <p>I have participated in science fairs such as in 3rd grade and 5th grade. A science fair is an event hosted by a school that offers students the opportunity to experience the practices of science an engineering for themselves.
-                The basic idea is that a science fair is a contest that involves science. Different people or teams compete to see whose project is better and to expand their knowledge in science.
-            </p>
-            <h2>Alta Vista Elementary School Science Fair of 2025</h2>
-            <em>An interview between everyone who participated in the science fair.<br>16:00 is when my sister's presentation is. 17:30 is my presentation.</em> <br>
-            <iframe
-                width="560"
-                height="315"
-                src="https://www.youtube.com/embed/4R8nnT728FM?si=_8dq2fYds0V2eQ5o&amp;start=1050"
-                title="YouTube video player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-            </iframe> <br>
-            <p id="sci-writing">I was on a trip in Costa Rica, when my mom told me that I was invited to be in the Alta Vista's first ever science fair. I was pretty excited.
-                My mom told me that I had to fill in a form about my science intrests first, so they could decide what kind of mentor I would get. I filled in physics, coding, robotics, and AI.
-                I spent some time thinking about what my project should be. I had a Mindstorms lego robotics kit, so I was going to use that. I first thought about some robot that could navigate a course and obstacles.
-                I had a small lego gun, so I decided that I was going to make a robot that automatically aim at a target, as long as the robot is in range. After we got back from the trip, I started working on building my robot.
-                I had to adjust some things, because things didn't always go the way I planned it. Eventually, I managed to create a <a target="_blank" href="slideshow.html">robot.</a> Click on the link to see my robot. As you can see,
-                it has 2 motors to adjust the angle of the projectile, 1 motor to shoot it, and a distance sensor to measure the range of it. The big lego in the back (the gun is in the front) is the hub. The hub had all the electricity,
-                programming, and it connects everything together.</p>
+            <p>Exploring science and engineering through hands-on projects</p>
         </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                let links = document.getElementsByClassName("link");
-                
-                for (let i = 0; i < links.length; i++) {
-                    links[i].style.left = (((i + 1) * (100 / (links.length + 1))) - 1.5) + "%";
-                }
 
-            });
-        </script>
-    </body>
+        <div class="card">
+            <h2>Overview</h2>
+            <p>I have participated in science fairs in 3rd grade and 5th grade. A science fair is an event hosted by a school that offers students the opportunity to experience the practices of science and engineering for themselves. Different people or teams compete to see whose project is better and to expand their knowledge in science.</p>
+        </div>
+
+        <div class="card">
+            <h2>Alta Vista Elementary Science Fair 2025</h2>
+            <div class="video-wrapper">
+                <iframe
+                    src="https://www.youtube.com/embed/4R8nnT728FM?si=_8dq2fYds0V2eQ5o&amp;start=1050"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <p class="video-caption">An interview with everyone who participated in the science fair. 16:00 &mdash; my sister's presentation. 17:30 &mdash; my presentation.</p>
+            <p>I was on a trip in Costa Rica when my mom told me I was invited to be in Alta Vista's first ever science fair. I was pretty excited. My mom told me I had to fill in a form about my science interests so they could decide what kind of mentor I would get. I filled in physics, coding, robotics, and AI.</p>
+            <p>I spent some time thinking about what my project should be. I had a Mindstorms LEGO robotics kit, so I was going to use that. I first thought about a robot that could navigate a course and obstacles. I had a small LEGO gun, so I decided to make a robot that automatically aims at a target as long as the robot is in range.</p>
+            <p>After we got back from the trip, I started working on building my robot. I had to adjust some things, because things didn't always go the way I planned. Eventually, I managed to create a <a target="_blank" href="slideshow.html">robot</a>. As you can see, it has:</p>
+            <ul>
+                <li>2 motors to adjust the angle of the projectile</li>
+                <li>1 motor to shoot it</li>
+                <li>A distance sensor to measure the range</li>
+                <li>A hub in the back with all the electronics, programming, and connections</li>
+            </ul>
+            <p><a href="slideshow.html" target="_blank">View robot photos &rarr;</a></p>
+        </div>
+
+    </div>
+</body>
 </html>

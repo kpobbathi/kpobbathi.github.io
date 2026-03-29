@@ -1,43 +1,63 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Krishna's Art</title>
-        <link rel="stylesheet" href="basic_styles.css">
-        <style>
-            body {
-                font-family: 'Times New Roman', Times, serif;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="link">
-            <a class="link" href="index.html">About Me</a>
-            <br>
-            <a class="link" href="games.html">Games</a>
-            <br>
-            <a class="link" style="color: blue;" href="">Artwork</a>
-            <br>
-            <a class="link" target="_blank" href="painter.html">Painter App</a>
-            <br>
-            <a class="link" href="science_fair.html">Science Fair</a>
-        </div>
-        <div id="main_container">
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna's Art</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="basic_styles.css">
+    <style>
+        .art-cta {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+        .art-cta a {
+            display: inline-block;
+            margin-top: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .art-cta a:hover {
+            background: var(--accent-hover);
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html">About Me</a>
+        <a href="games.html">Games</a>
+        <a href="" class="active">Artwork</a>
+        <a href="science_fair.html">Science Fair</a>
+    </nav>
+
+    <div id="main_container">
+
+        <div class="hero">
             <h1>My Art</h1>
-            <p>These are some examples of my creations.</p>
-
-            <p>&#11088; &#11088; &#11088; &#11088; &#11088;</p>
-            <p></p>
+            <p>Creative works and digital creations</p>
         </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                let links = document.getElementsByClassName("link");
-                
-                for (let i = 0; i < links.length; i++) {
-                    links[i].style.left = (((i + 1) * (100 / (links.length + 1))) - 1.5) + "%";
-                }
 
-            });
-        </script>
-    </body>
+        <div class="card">
+            <h2>Gallery</h2>
+            <p>These are some examples of my creations.</p>
+            <div class="art-cta">
+                <p>Want to make your own art? Try the Painter App!</p>
+                <a href="painter.html" target="_blank">Open Painter App &rarr;</a>
+            </div>
+        </div>
+
+    </div>
+</body>
 </html>

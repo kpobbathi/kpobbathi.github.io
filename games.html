@@ -1,53 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Krishna's Programming</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Krishna's Games</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="basic_styles.css">
         <style>
-            body {
-                margin-left: 25px;
-            }
             canvas {
-                border: 3px solid #000000;
-                border-radius: 5px;
+                border-radius: 8px;
                 box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+                display: block;
             }
-            button {
-                background-color: red;
-                border: 5px ridge black;
-                margin: 20px;
-                margin-left: 370px;
-                font-family: 'Times New Roman', Times, serif;
-                font-size: 1em;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                width: auto;
-                height: auto;
+            .game-wrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 1.5rem;
             }
-            button:hover {
+            #next {
+                background: var(--accent);
+                color: white;
+                border: none;
+                padding: 0.55rem 1.4rem;
+                border-radius: 8px;
+                font-family: 'Inter', sans-serif;
+                font-size: 0.95rem;
+                font-weight: 500;
                 cursor: pointer;
+                margin-top: 1.25rem;
+                box-shadow: var(--shadow-md);
+                transition: background 0.2s;
+            }
+            #next:hover {
+                background: var(--accent-hover);
             }
         </style>
     </head>
     <body>
-        <div id="link">
-            <a class="link" href="index.html">About Me</a>
-            <br>
-            <a class="link" style="color: blue;" href="">Games</a>
-            <br>
-            <a class="link" href="my_art.html">Artwork</a>
-            <br>
-            <a class="link" target="_blank" href="painter.html">Painter App</a>
-            <br>
-            <a class="link" href="science_fair.html">Science Fair</a>
-        </div>
-        <div id="main_container">
-            <h1>My Games</h1>
-            <p>I made these games myself.</p>
-            <p id="text_"></p>
 
-            <p id="games"></p>
+        <nav>
+            <a href="index.html">About Me</a>
+            <a href="" class="active">Games</a>
+            <a href="my_art.html">Artwork</a>
+            <a href="science_fair.html">Science Fair</a>
+        </nav>
+
+        <div id="main_container">
+            <div class="hero">
+                <h1>My Games</h1>
+                <p>Games I built myself using p5.js</p>
+            </div>
+            <div class="card">
+                <h2>Block the Fish</h2>
+                <p id="text_"></p>
+                <p id="games"></p>
+            </div>
+            <div class="game-wrapper">
 
             <script>
                 let game = 1;
@@ -453,8 +465,7 @@
                         }
                     });
 
-                    const left_position = (document.documentElement.clientWidth / 2) - (canvas_size / 2);
-                    canvas.style.marginLeft = left_position + "px";
+                    document.querySelector('.game-wrapper').prepend(canvas);
         
                     setup_buttons();
                     setup_fish();
@@ -504,17 +515,7 @@
             </script>
 
             <button id="next">Next Game</button>
+            </div>
         </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                let links = document.getElementsByClassName("link");
-                
-                for (let i = 0; i < links.length; i++) {
-                    links[i].style.left = (((i + 1) * (100 / (links.length + 1))) - 1.5) + "%";
-                }
-
-            });
-        </script>
     </body>
 </html>
