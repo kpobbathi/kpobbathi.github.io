@@ -21,23 +21,6 @@
                 align-items: center;
                 margin-top: 1.5rem;
             }
-            #next {
-                background: var(--accent);
-                color: white;
-                border: none;
-                padding: 0.55rem 1.4rem;
-                border-radius: 8px;
-                font-family: 'Lora', Georgia, serif;
-                font-size: 0.95rem;
-                font-weight: 500;
-                cursor: pointer;
-                margin-top: 1.25rem;
-                box-shadow: var(--shadow-md);
-                transition: background 0.2s;
-            }
-            #next:hover {
-                background: var(--accent-hover);
-            }
         </style>
     </head>
     <body>
@@ -107,27 +90,6 @@
                 let reply = document.getElementById("text_");
                 the_games.innerHTML = 'The games currently are "' + keys.join('", "') + '".';
 
-                function positionButton() {
-                    const next_button = document.getElementById("next");
-                    const leftPosition = (document.documentElement.clientWidth / 2) - (next_button.offsetWidth / 2)
-                    next_button.style.marginLeft = leftPosition + "px";
-                    
-                }
-
-                function setup_buttons() {
-                    let next_button = document.getElementById("next");
-                    
-                    next_button.addEventListener("click", function(){
-                        if (game + 1 <= keys.length) {
-                            game++;
-                        }
-                        else {
-                            game = 1;
-                        }
-                        reply.innerHTML()
-                    });
-                    
-                }
 
                 function handle_button (func, b) {
                     let scaledMouseX = mouseX / scale_num
@@ -467,10 +429,7 @@
 
                     document.querySelector('.game-wrapper').prepend(canvas);
         
-                    setup_buttons();
                     setup_fish();
-                    
-                    setTimeout(positionButton, 100);
                     
                     textFont('serif');
                 }
@@ -514,8 +473,375 @@
                 
             </script>
 
-            <button id="next">Next Game</button>
             </div>
+
+            <!-- Harry Potter Trivia Game -->
+            <div class="card" style="margin-top: 2rem;">
+                <h2>Harry Potter Trivia</h2>
+                <p>Test your wizarding knowledge across four difficulty levels.</p>
+            </div>
+
+            <div id="trivia-game">
+                <!-- Difficulty Select -->
+                <div id="trivia-select" class="trivia-screen">
+                    <h3>Choose Your Difficulty</h3>
+                    <div class="trivia-diff-grid">
+                        <button class="diff-btn diff-easy"   onclick="startTrivia('easy')">Easy</button>
+                        <button class="diff-btn diff-medium" onclick="startTrivia('medium')">Medium</button>
+                        <button class="diff-btn diff-hard"   onclick="startTrivia('hard')">Hard</button>
+                        <button class="diff-btn diff-insane" onclick="startTrivia('insane')">Insane</button>
+                    </div>
+                </div>
+
+                <!-- Question Screen -->
+                <div id="trivia-question" class="trivia-screen" style="display:none;">
+                    <div class="trivia-meta">
+                        <span id="trivia-progress"></span>
+                        <span id="trivia-score-live"></span>
+                    </div>
+                    <div class="trivia-progress-bar"><div id="trivia-bar"></div></div>
+                    <div id="trivia-q-text" class="trivia-q-text"></div>
+                    <div id="trivia-choices" class="trivia-choices"></div>
+                    <div id="trivia-feedback" class="trivia-feedback"></div>
+                    <button id="trivia-next-btn" class="trivia-next-btn" onclick="nextQuestion()" style="display:none;">Next Question →</button>
+                </div>
+
+                <!-- Results Screen -->
+                <div id="trivia-results" class="trivia-screen" style="display:none;">
+                    <div class="trivia-results-inner">
+                        <div id="trivia-result-emoji" class="trivia-emoji"></div>
+                        <h3 id="trivia-result-title"></h3>
+                        <p id="trivia-result-score"></p>
+                        <p id="trivia-result-msg"></p>
+                        <button class="diff-btn diff-easy" onclick="resetTrivia()">Play Again</button>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                #trivia-game {
+                    max-width: 680px;
+                    margin: 0 auto 2rem;
+                    padding: 0 1.5rem;
+                    font-family: 'Lora', Georgia, serif;
+                }
+                .trivia-screen { animation: fadeIn 0.3s ease; }
+                @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+                #trivia-select {
+                    background: var(--card-bg);
+                    border-radius: var(--radius);
+                    padding: 2rem;
+                    box-shadow: var(--shadow-md);
+                    border: 1px solid var(--border);
+                    text-align: center;
+                }
+                #trivia-select h3 {
+                    font-size: 1.4rem;
+                    color: var(--primary);
+                    margin-bottom: 1.5rem;
+                }
+                .trivia-diff-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1rem;
+                }
+                .diff-btn {
+                    padding: 0.85rem 1rem;
+                    border: none;
+                    border-radius: 10px;
+                    font-family: 'Lora', Georgia, serif;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: transform 0.15s, box-shadow 0.15s;
+                    color: white;
+                }
+                .diff-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+                .diff-easy   { background: #22c55e; }
+                .diff-medium { background: #f59e0b; }
+                .diff-hard   { background: #ef4444; }
+                .diff-insane { background: #7c3aed; }
+
+                #trivia-question {
+                    background: var(--card-bg);
+                    border-radius: var(--radius);
+                    padding: 2rem;
+                    box-shadow: var(--shadow-md);
+                    border: 1px solid var(--border);
+                }
+                .trivia-meta {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 0.88rem;
+                    color: var(--text-muted);
+                    margin-bottom: 0.5rem;
+                }
+                .trivia-progress-bar {
+                    height: 6px;
+                    background: var(--border);
+                    border-radius: 3px;
+                    margin-bottom: 1.5rem;
+                    overflow: hidden;
+                }
+                #trivia-bar {
+                    height: 100%;
+                    background: var(--accent);
+                    border-radius: 3px;
+                    transition: width 0.4s ease;
+                }
+                .trivia-q-text {
+                    font-size: 1.15rem;
+                    font-weight: 600;
+                    color: var(--text);
+                    margin-bottom: 1.25rem;
+                    line-height: 1.5;
+                }
+                .trivia-choices {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0.75rem;
+                }
+                .choice-btn {
+                    padding: 0.75rem 1rem;
+                    border: 2px solid var(--border);
+                    border-radius: 10px;
+                    background: var(--bg);
+                    font-family: 'Lora', Georgia, serif;
+                    font-size: 0.92rem;
+                    cursor: pointer;
+                    text-align: left;
+                    transition: border-color 0.15s, background 0.15s;
+                    line-height: 1.4;
+                }
+                .choice-btn:hover:not(:disabled) { border-color: var(--accent); background: rgba(59,130,246,0.06); }
+                .choice-btn.correct { border-color: #22c55e; background: #f0fdf4; color: #15803d; font-weight: 600; }
+                .choice-btn.wrong   { border-color: #ef4444; background: #fef2f2; color: #b91c1c; }
+                .choice-btn:disabled { cursor: default; }
+
+                .trivia-feedback {
+                    margin-top: 1rem;
+                    font-size: 0.92rem;
+                    font-weight: 600;
+                    min-height: 1.4rem;
+                }
+                .trivia-next-btn {
+                    margin-top: 1.25rem;
+                    padding: 0.6rem 1.4rem;
+                    background: var(--accent);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-family: 'Lora', Georgia, serif;
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background 0.2s;
+                }
+                .trivia-next-btn:hover { background: var(--accent-hover); }
+
+                #trivia-results {
+                    background: var(--card-bg);
+                    border-radius: var(--radius);
+                    padding: 2.5rem 2rem;
+                    box-shadow: var(--shadow-md);
+                    border: 1px solid var(--border);
+                }
+                .trivia-results-inner { text-align: center; }
+                .trivia-emoji { font-size: 3.5rem; margin-bottom: 0.75rem; }
+                .trivia-results-inner h3 { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+                .trivia-results-inner p  { color: var(--text-muted); margin-bottom: 0.5rem; }
+            </style>
+
+            <script>
+                const triviaQuestions = {
+                    easy: [
+                        { q: "What is Harry Potter's owl's name?", choices: ["Errol", "Hedwig", "Pigwidgeon", "Hermes"], answer: 1 },
+                        { q: "What Hogwarts house is Harry Potter sorted into?", choices: ["Slytherin", "Ravenclaw", "Hufflepuff", "Gryffindor"], answer: 3 },
+                        { q: "What sport do wizards play on broomsticks?", choices: ["Bludgeball", "Quidditch", "Seekball", "Wizball"], answer: 1 },
+                        { q: "What platform does the Hogwarts Express leave from?", choices: ["Platform 7", "Platform 10", "Platform 9¾", "Platform 8½"], answer: 2 },
+                        { q: "Who is Harry Potter's best friend?", choices: ["Neville Longbottom", "Dean Thomas", "Ron Weasley", "Seamus Finnigan"], answer: 2 },
+                        { q: "Who is the headmaster of Hogwarts when Harry arrives?", choices: ["Professor McGonagall", "Professor Snape", "Cornelius Fudge", "Albus Dumbledore"], answer: 3 },
+                        { q: "What position does Harry play in Quidditch?", choices: ["Keeper", "Beater", "Chaser", "Seeker"], answer: 3 },
+                        { q: "What is the name of the wizarding bank?", choices: ["Diagon Bank", "Gringotts", "Vaultkeep", "Ollivanders"], answer: 1 },
+                        { q: "What does the spell 'Wingardium Leviosa' do?", choices: ["Creates fire", "Unlocks doors", "Makes objects levitate", "Disarms an opponent"], answer: 2 },
+                        { q: "What animal can Professor McGonagall transform into?", choices: ["Owl", "Dog", "Cat", "Fox"], answer: 2 },
+                        { q: "What is the name of the dark lord?", choices: ["Grindelwald", "Morgana", "Voldemort", "Saruman"], answer: 2 },
+                        { q: "What house is Draco Malfoy in?", choices: ["Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"], answer: 3 },
+                        { q: "What is Ron's rat's name?", choices: ["Scabbers", "Crookshanks", "Goyle", "Whiskers"], answer: 0 },
+                        { q: "What is Hermione's cat's name?", choices: ["Snowball", "Mittens", "Crookshanks", "Fluffy"], answer: 2 },
+                        { q: "Who teaches Potions at Hogwarts?", choices: ["Professor Quirrell", "Professor Flitwick", "Professor Sprout", "Professor Snape"], answer: 3 },
+                        { q: "What color is the Hogwarts Express?", choices: ["Blue", "Green", "Black", "Scarlet"], answer: 3 },
+                        { q: "Where do the Dursleys live?", choices: ["4 Privet Drive", "12 Grimmauld Place", "The Burrow", "Godric's Hollow"], answer: 0 },
+                        { q: "What does the spell 'Expelliarmus' do?", choices: ["Creates a shield", "Disarms the opponent", "Causes pain", "Makes the target invisible"], answer: 1 },
+                        { q: "What is Hagrid's first job at Hogwarts?", choices: ["Potions teacher", "Librarian", "Keeper of Keys and Grounds", "Defence Against the Dark Arts teacher"], answer: 2 },
+                        { q: "What magical creature guards Azkaban prison?", choices: ["Trolls", "Giants", "Werewolves", "Dementors"], answer: 3 },
+                    ],
+                    medium: [
+                        { q: "What is the form of Harry's Patronus?", choices: ["Doe", "Phoenix", "Stag", "Wolf"], answer: 2 },
+                        { q: "Who is the Half-Blood Prince?", choices: ["Harry Potter", "Draco Malfoy", "Tom Riddle", "Severus Snape"], answer: 3 },
+                        { q: "What does the spell 'Accio' do?", choices: ["Creates light", "Summons an object", "Creates a shield", "Unlocks doors"], answer: 1 },
+                        { q: "What is the name of the Weasley family home?", choices: ["The Nest", "The Burrow", "The Hollow", "The Hive"], answer: 1 },
+                        { q: "What does O.W.L. stand for?", choices: ["Ordinary Wizarding Level", "Official Wizarding License", "Outstanding Wizard Learning", "Order of Wizarding Lords"], answer: 0 },
+                        { q: "What is the Hogwarts motto?", choices: ["Magic Above All", "Never Tickle a Sleeping Dragon", "Wisdom Bravery Loyalty Cunning", "Knowledge is Power"], answer: 1 },
+                        { q: "Who teaches Defence Against the Dark Arts in Harry's third year?", choices: ["Professor Quirrell", "Professor Lockhart", "Professor Lupin", "Professor Moody"], answer: 2 },
+                        { q: "How many points is catching the Golden Snitch worth in Quidditch?", choices: ["100 points", "150 points", "200 points", "50 points"], answer: 1 },
+                        { q: "What is Dumbledore's phoenix named?", choices: ["Fawkes", "Phoenix", "Blaze", "Ember"], answer: 0 },
+                        { q: "What kind of creature is Aragog?", choices: ["A giant serpent", "A dragon", "A giant spider", "A hippogriff"], answer: 2 },
+                        { q: "Who is the ghost of Gryffindor house?", choices: ["The Bloody Baron", "Nearly Headless Nick", "The Grey Lady", "The Fat Friar"], answer: 1 },
+                        { q: "What is the incantation for the Patronus charm?", choices: ["Expecto Patronum", "Patronus Revelio", "Expecto Protego", "Lumos Patronum"], answer: 0 },
+                        { q: "What is the name of the main pub in Hogsmeade?", choices: ["The Leaky Cauldron", "The Hog's Head", "The Three Broomsticks", "The Sleeping Dragon"], answer: 2 },
+                        { q: "Who created the Philosopher's Stone?", choices: ["Dumbledore", "Nicolas Flamel", "Merlin", "Godric Gryffindor"], answer: 1 },
+                        { q: "What does the Deluminator do?", choices: ["Creates a shield", "Removes light from a place", "Detects dark magic", "Opens any lock"], answer: 1 },
+                        { q: "What are the Marauders' nicknames?", choices: ["Moony, Wormtail, Padfoot, Prongs", "Moony, Rattail, Blackpaw, Antlers", "Moon, Worm, Pad, Prong", "Wolf, Rat, Dog, Stag"], answer: 0 },
+                        { q: "What is Hermione's middle name?", choices: ["Anne", "Rose", "Jean", "Jane"], answer: 2 },
+                        { q: "In which Gringotts vault is the Philosopher's Stone kept?", choices: ["Vault 711", "Vault 713", "Vault 687", "Vault 999"], answer: 1 },
+                        { q: "What does the spell 'Obliviate' do?", choices: ["Kills the target", "Erases memories", "Creates fire", "Causes levitation"], answer: 1 },
+                        { q: "Who is the Divination teacher at Hogwarts?", choices: ["Professor Vector", "Professor Sinistra", "Professor Trelawney", "Professor Binns"], answer: 2 },
+                    ],
+                    hard: [
+                        { q: "What is Voldemort's snake's name?", choices: ["Basilisk", "Nagini", "Serpentine", "Ophelia"], answer: 1 },
+                        { q: "What are the three Deathly Hallows?", choices: ["The Elder Wand, Resurrection Stone, Cloak of Invisibility", "The Dark Mark, Horcrux, Time-Turner", "The Sorting Hat, Goblet of Fire, Mirror of Erised", "The Elder Wand, Resurrection Stone, Philosopher's Stone"], answer: 0 },
+                        { q: "Who kills Sirius Black?", choices: ["Voldemort", "Lucius Malfoy", "Bellatrix Lestrange", "Peter Pettigrew"], answer: 2 },
+                        { q: "What is the address of the Order of the Phoenix headquarters?", choices: ["13 Knockturn Alley", "12 Grimmauld Place", "4 Privet Drive", "The Shrieking Shack"], answer: 1 },
+                        { q: "What is the core of Voldemort's wand?", choices: ["Dragon heartstring", "Unicorn hair", "Phoenix feather", "Basilisk fang"], answer: 2 },
+                        { q: "What year did Harry first start at Hogwarts?", choices: ["1989", "1990", "1991", "1992"], answer: 2 },
+                        { q: "Who was the original owner of the Elder Wand?", choices: ["Godric Gryffindor", "Merlin", "Antioch Peverell", "Ignotus Peverell"], answer: 2 },
+                        { q: "Which centaur teaches Divination after Trelawney is dismissed?", choices: ["Bane", "Ronan", "Magorian", "Firenze"], answer: 3 },
+                        { q: "What did Dumbledore leave Ron in his will?", choices: ["The Resurrection Stone", "The Sword of Gryffindor", "The Deluminator", "The Elder Wand"], answer: 2 },
+                        { q: "What is the name of Fred and George's joke shop?", choices: ["Weasley's Wonderful Wonders", "Weasleys' Wizard Wheezes", "The Joke Cauldron", "Weasley's Wizarding Warehouse"], answer: 1 },
+                        { q: "What does N.E.W.T. stand for?", choices: ["Notably Exceptional Wizarding Test", "Nastily Exhausting Wizarding Test", "National Evaluation of Wizarding Talent", "Notable Excellence in Wizarding Training"], answer: 1 },
+                        { q: "Who is the Grey Lady?", choices: ["The ghost of Hufflepuff", "The ghost of Slytherin", "The ghost of Ravenclaw", "The ghost of Gryffindor"], answer: 2 },
+                        { q: "Who is the Slytherin house ghost?", choices: ["Nearly Headless Nick", "The Bloody Baron", "The Fat Friar", "The Grey Lady"], answer: 1 },
+                        { q: "What was the first task in the Triwizard Tournament?", choices: ["The Maze", "The Lake", "Dragons", "A Sphinx"], answer: 2 },
+                        { q: "What spell does Harry use to defeat Voldemort in their final duel?", choices: ["Avada Kedavra", "Expelliarmus", "Expecto Patronum", "Stupefy"], answer: 1 },
+                        { q: "Who is Voldemort's mother?", choices: ["Bellatrix Lestrange", "Merope Gaunt", "Helena Ravenclaw", "Narcissa Malfoy"], answer: 1 },
+                        { q: "Who is Harry's godfather?", choices: ["Remus Lupin", "Alastor Moody", "Arthur Weasley", "Sirius Black"], answer: 3 },
+                        { q: "What potion grants the drinker extraordinary luck?", choices: ["Veritaserum", "Polyjuice Potion", "Felix Felicis", "Amortentia"], answer: 2 },
+                        { q: "What is the incantation for the Killing Curse?", choices: ["Crucio", "Sectumsempra", "Avada Kedavra", "Imperius"], answer: 2 },
+                        { q: "What branch of magic involves communicating with the dead?", choices: ["Divination", "Necromancy", "The Resurrection Stone", "Legilimency"], answer: 1 },
+                    ],
+                    insane: [
+                        { q: "What is Dumbledore's full name?", choices: ["Albus Percival Wulfric Brian Dumbledore", "Albus Brian Wulfric Percival Dumbledore", "Albus Wulfric Percival Brian Dumbledore", "Albus Percival Brian Wulfric Dumbledore"], answer: 0 },
+                        { q: "What is the first name of Professor Sprout?", choices: ["Phyllis", "Patricia", "Pomona", "Penelope"], answer: 2 },
+                        { q: "Who wrote 'Fantastic Beasts and Where to Find Them'?", choices: ["Albus Dumbledore", "Gilderoy Lockhart", "Bathilda Bagshot", "Newt Scamander"], answer: 3 },
+                        { q: "What wood is Ron Weasley's first wand made from?", choices: ["Oak", "Willow", "Ash", "Hazel"], answer: 1 },
+                        { q: "What is the core of Hermione Granger's wand?", choices: ["Phoenix feather", "Unicorn hair", "Dragon heartstring", "Basilisk fang"], answer: 2 },
+                        { q: "Who wrote 'A History of Magic'?", choices: ["Bathilda Bagshot", "Miranda Goshawk", "Adalbert Waffling", "Phyllida Spore"], answer: 0 },
+                        { q: "What is Harry Potter's Gringotts vault number?", choices: ["Vault 711", "Vault 687", "Vault 713", "Vault 500"], answer: 1 },
+                        { q: "What is the name of Voldemort's father?", choices: ["Morfin Gaunt", "Marvolo Gaunt", "Tom Riddle Sr.", "Corvinus Gaunt"], answer: 2 },
+                        { q: "What is Neville Longbottom's toad's name?", choices: ["Ribbity", "Trevor", "Hoppy", "Gerald"], answer: 1 },
+                        { q: "What is the length of Harry Potter's wand?", choices: ["10 inches", "11 inches", "12 inches", "9½ inches"], answer: 1 },
+                        { q: "Who was the original owner of the Deathly Hallow Invisibility Cloak?", choices: ["Antioch Peverell", "Cadmus Peverell", "Ignotus Peverell", "Salazar Slytherin"], answer: 2 },
+                        { q: "Where did Dumbledore's Army first meet?", choices: ["The Three Broomsticks", "The Hog's Head", "The Leaky Cauldron", "The Shrieking Shack"], answer: 1 },
+                        { q: "What is the Hufflepuff house ghost?", choices: ["The Fat Friar", "Nearly Headless Nick", "The Bloody Baron", "The Grey Lady"], answer: 0 },
+                        { q: "What is the name of Sirius Black's mother?", choices: ["Narcissa Black", "Walburga Black", "Bellatrix Black", "Andromeda Black"], answer: 1 },
+                        { q: "What is the Hogwarts motto in Latin?", choices: ["Semper Fidelis", "Fortis et Fidelis", "Draco Dormiens Nunquam Titillandus", "Nunquam Dormiens Draco"], answer: 2 },
+                        { q: "What is the core of Viktor Krum's wand?", choices: ["Unicorn hair", "Phoenix feather", "Dragon heartstring", "Thestral hair"], answer: 2 },
+                        { q: "What is the real name of the Grey Lady?", choices: ["Rowena Ravenclaw", "Helena Ravenclaw", "Myrtle Warren", "Lavender Brown"], answer: 1 },
+                        { q: "What is the full name of Mad-Eye Moody?", choices: ["Algernon Moody", "Alastor Moody", "Alasdair Moody", "Alaric Moody"], answer: 1 },
+                        { q: "What is the name of the Ravenclaw student who gives Harry a clue about his egg in book 4?", choices: ["Luna Lovegood", "Cho Chang", "Padma Patil", "Marietta Edgecombe"], answer: 1 },
+                        { q: "How many staircases does Hogwarts have?", choices: ["112", "124", "142", "182"], answer: 2 },
+                    ]
+                };
+
+                let currentDifficulty = null;
+                let currentIndex = 0;
+                let currentScore = 0;
+                let answered = false;
+
+                function startTrivia(difficulty) {
+                    currentDifficulty = difficulty;
+                    currentIndex = 0;
+                    currentScore = 0;
+                    answered = false;
+                    document.getElementById('trivia-select').style.display = 'none';
+                    document.getElementById('trivia-results').style.display = 'none';
+                    document.getElementById('trivia-question').style.display = 'block';
+                    showQuestion();
+                }
+
+                function showQuestion() {
+                    const questions = triviaQuestions[currentDifficulty];
+                    const total = questions.length;
+                    const q = questions[currentIndex];
+                    answered = false;
+
+                    document.getElementById('trivia-progress').textContent = `Question ${currentIndex + 1} of ${total}`;
+                    document.getElementById('trivia-score-live').textContent = `Score: ${currentScore}`;
+                    document.getElementById('trivia-bar').style.width = ((currentIndex / total) * 100) + '%';
+                    document.getElementById('trivia-q-text').textContent = q.q;
+                    document.getElementById('trivia-feedback').textContent = '';
+                    document.getElementById('trivia-next-btn').style.display = 'none';
+
+                    const choicesEl = document.getElementById('trivia-choices');
+                    choicesEl.innerHTML = '';
+                    q.choices.forEach((choice, i) => {
+                        const btn = document.createElement('button');
+                        btn.className = 'choice-btn';
+                        btn.textContent = choice;
+                        btn.onclick = () => selectAnswer(i, btn);
+                        choicesEl.appendChild(btn);
+                    });
+                }
+
+                function selectAnswer(index, btn) {
+                    if (answered) return;
+                    answered = true;
+
+                    const q = triviaQuestions[currentDifficulty][currentIndex];
+                    const allBtns = document.querySelectorAll('.choice-btn');
+                    allBtns.forEach(b => b.disabled = true);
+
+                    if (index === q.answer) {
+                        btn.classList.add('correct');
+                        currentScore++;
+                        document.getElementById('trivia-feedback').style.color = '#15803d';
+                        document.getElementById('trivia-feedback').textContent = '✓ Correct!';
+                    } else {
+                        btn.classList.add('wrong');
+                        allBtns[q.answer].classList.add('correct');
+                        document.getElementById('trivia-feedback').style.color = '#b91c1c';
+                        document.getElementById('trivia-feedback').textContent = '✗ Wrong!';
+                    }
+                    document.getElementById('trivia-score-live').textContent = `Score: ${currentScore}`;
+                    document.getElementById('trivia-next-btn').style.display = 'inline-block';
+                }
+
+                function nextQuestion() {
+                    currentIndex++;
+                    const total = triviaQuestions[currentDifficulty].length;
+                    if (currentIndex >= total) {
+                        showResults();
+                    } else {
+                        showQuestion();
+                    }
+                }
+
+                function showResults() {
+                    document.getElementById('trivia-question').style.display = 'none';
+                    document.getElementById('trivia-results').style.display = 'block';
+                    const total = triviaQuestions[currentDifficulty].length;
+                    const pct = Math.round((currentScore / total) * 100);
+
+                    let emoji, title, msg;
+                    if (pct === 100)      { emoji = '🏆'; title = 'Perfect Score!';     msg = 'You are a true Hogwarts professor!'; }
+                    else if (pct >= 80)   { emoji = '⚡'; title = 'Outstanding!';        msg = 'Dumbledore would be proud.'; }
+                    else if (pct >= 60)   { emoji = '🧙'; title = 'Exceeds Expectations'; msg = 'A solid witch or wizard!'; }
+                    else if (pct >= 40)   { emoji = '📚'; title = 'Acceptable';          msg = 'Keep reading your spell books.'; }
+                    else                   { emoji = '🪄'; title = 'Troll';              msg = 'Even Trevor the toad knows more...'; }
+
+                    document.getElementById('trivia-result-emoji').textContent = emoji;
+                    document.getElementById('trivia-result-title').textContent = title;
+                    document.getElementById('trivia-result-score').textContent = `You scored ${currentScore} out of ${total} (${pct}%)`;
+                    document.getElementById('trivia-result-msg').textContent = msg;
+                }
+
+                function resetTrivia() {
+                    document.getElementById('trivia-results').style.display = 'none';
+                    document.getElementById('trivia-select').style.display = 'block';
+                }
+            </script>
         </div>
     </body>
 </html>
